@@ -39,7 +39,7 @@ export default function Navbar() {
             {userData?.image ? (
               <Image 
                 src={userData!.image as string} 
-                alt="Profile"
+                alt=""
                 width={40} 
                 height={40} 
                 className="w-full h-full object-cover rounded-full"
