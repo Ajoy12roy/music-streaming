@@ -33,11 +33,18 @@ export default function AllBandsPage() {
     <main className="min-h-screen bg-[#090215] text-white pb-20">
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-6 mt-8 mb-12">
+      <div className=" max-w-7xl mx-auto px-6 mt-8 mb-12">
+        <div className="flex justify-between mb-6">
+        <div>
+          <h1 className="text-5xl font-bold bg-linear-to-r from-teal-600 to-red-700 bg-clip-text text-transparent">The Home of Music</h1>
+          <p className="text-gray-400 mt-2">Discover your favorite bands and explore their music.</p>
+
+        </div>
+        <div>
         <form onSubmit={handleSearch} className="relative w-full max-w-lg mb-8">
           <input 
             type="text" 
-            placeholder="Search bands (e.g., Warfaze)..."
+            placeholder="Search bands"
             className="w-full bg-white/10 border border-white/20 rounded-full px-6 py-4 pl-14 text-white outline-none focus:border-purple-500 transition"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -45,6 +52,8 @@ export default function AllBandsPage() {
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={24} />
           <button type="submit" className="hidden">Search</button>
         </form>
+        </div>
+        </div>
 
         {isLoading ? (
           <div className="flex justify-center mt-20"><Loader2 className="animate-spin text-purple-500" size={50} /></div>
