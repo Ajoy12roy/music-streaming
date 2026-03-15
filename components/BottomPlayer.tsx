@@ -19,6 +19,25 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // --- NEW: RECENT ACTIVITY LOGIC ---
+  useEffect(() => {
+    if (songQuery && isPlaying) {
+      const recent = JSON.parse(localStorage.getItem('recentlyPlayed') || '[]');
+      const newEntry = { 
+        id: Date.now(), 
+        title: songQuery, 
+        playedAt: new Date().toISOString() 
+      };
+      
+      // ডুপ্লিকেট বাদ দিয়ে লেটেস্ট ১০টি গান রাখা
+      const filtered = [newEntry, ...recent.filter((s: any) => s.title !== songQuery)].slice(0, 10);
+      localStorage.setItem('recentlyPlayed', JSON.stringify(filtered));
+      
+      // প্রোফাইল পেজকে আপডেট জানানোর জন্য ইভেন্ট ফায়ার করা
+      window.dispatchEvent(new Event('storage_updated'));
+    }
+  }, [songQuery, isPlaying]);
+
   // গান খোঁজা
   useEffect(() => {
     if (!songQuery) return;
@@ -41,47 +60,25 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
     fetchAudio();
   }, [songQuery]);
 
-  // টাইম আপডেট হ্যান্ডলার
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-    }
-  };
-
-  // প্রগ্রেস বার চেইঞ্জ (গানের পজিশন বদলানো)
+  // বাকি কন্ট্রোল ফাংশনগুলো অপরিবর্তিত থাকবে...
+  const handleTimeUpdate = () => { if (audioRef.current) setCurrentTime(audioRef.current.currentTime); };
+  const handleLoadedMetadata = () => { if (audioRef.current) setDuration(audioRef.current.duration); };
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      setCurrentTime(time);
-    }
+    if (audioRef.current) { audioRef.current.currentTime = time; setCurrentTime(time); }
   };
-
-  // ভলিউম চেইঞ্জ
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setVolume(val);
-    if (audioRef.current) {
-      audioRef.current.volume = val;
-    }
+    if (audioRef.current) audioRef.current.volume = val;
     setIsMuted(val === 0);
   };
-
   const togglePlay = () => {
     if (audioRef.current) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       isPlaying ? audioRef.current.pause() : audioRef.current.play();
       setIsPlaying(!isPlaying);
     }
   };
-
-  // টাইম ফরম্যাট (0:00)
   const formatTime = (time: number) => {
     const mins = Math.floor(time / 60);
     const secs = Math.floor(time % 60);
@@ -99,8 +96,7 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
         className="fixed bottom-8 left-1/2 z-50 w-100"
       >
         <div className="bg-[#120d1d]/95 backdrop-blur-3xl border border-white/10 rounded-[40px] p-6 shadow-2xl relative overflow-hidden">
-          
-          {/* Top Info */}
+          {/* ডিজাইন এলিমেন্টগুলো এখানে থাকবে (আগের মতোই) */}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
               <span className="flex gap-1 h-3">
@@ -113,7 +109,6 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
             <button onClick={onClose} className="text-gray-500 hover:text-white"><X size={20}/></button>
           </div>
 
-          {/* Song Name */}
           <div className="text-center mb-6">
             <h4 className="text-white font-bold text-lg truncate">{songQuery}</h4>
             <p className="text-gray-500 text-[10px] uppercase mt-1">HQ Stream Preview</p>
@@ -131,7 +126,6 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
             />
           )}
 
-          {/* Main Controls */}
           <div className="flex items-center justify-between mb-8 px-4">
             <SkipBack className="text-gray-500 cursor-pointer" />
             <button onClick={togglePlay} className="w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-600/30">
@@ -140,36 +134,18 @@ export default function BottomPlayer({ songQuery, onClose }: BottomPlayerProps) 
             <SkipForward className="text-gray-500 cursor-pointer" />
           </div>
 
-          {/* Progress Timeline */}
           <div className="mb-6">
-            <input 
-              type="range"
-              min="0"
-              max={duration || 0}
-              value={currentTime}
-              onChange={handleProgressChange}
-              className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-purple-500"
-            />
+            <input type="range" min="0" max={duration || 0} value={currentTime} onChange={handleProgressChange} className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-purple-500" />
             <div className="flex justify-between mt-2 text-[10px] text-gray-500 font-mono">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
 
-          {/* Volume Control */}
           <div className="flex items-center gap-3 bg-white/5 p-3 rounded-2xl">
             {volume === 0 || isMuted ? <VolumeX size={18} className="text-gray-500" /> : <Volume2 size={18} className="text-purple-400" />}
-            <input 
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-purple-400"
-            />
+            <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleVolumeChange} className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-purple-400" />
           </div>
-
         </div>
       </motion.div>
     </AnimatePresence>
