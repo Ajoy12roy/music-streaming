@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Music, Waves, Disc, Download } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Features() {
   const BAR_COUNT = 40;
@@ -38,29 +39,108 @@ export default function Features() {
       </div>
 
       {/* Cards */}
-     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-10 md:gap-16 p-0 m-0">
-     
-  <FeatureCard
-    icon={<Music className="text-purple-400" size={28} />}
-    title="Unlimited Music"
-    desc="Stream millions of songs from your favorite artists anytime, anywhere."
-  />
-  <FeatureCard
-    icon={<Waves className="text-blue-400" size={28} />}
-    title="High Quality Audio"
-    desc="Experience crystal clear sound with our premium 320 kbp audio streaming."
-  />
-  <FeatureCard
-    icon={<Disc className="text-purple-400" size={28} />}
-    title="Personalized"
-    desc="Get smart recommendations tailored just for you based on your unique taste."
-  />
-  <FeatureCard
-    icon={<Download className="text-green-400" size={28} />}
-    title="Offline Listening"
-    desc="Download your favorite tracks and enjoy music anytime, even without an internet connection."
-  />
-</div>
+    
+
+<motion.div
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16"
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true }}
+  variants={{
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }}
+>
+
+  {/* Card 1 */}
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 50 },
+      show: { opacity: 1, y: 0 }
+    }}
+    transition={{ duration: 0.7 }}
+    whileHover={{ scale: 1.08, y: -5 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-purple-500 to-pink-500 blur-xl opacity-0 group-hover:opacity-40 transition duration-500"></div>
+
+    <div className="relative backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+      <FeatureCard
+        icon={<Music className="text-purple-400" size={28} />}
+        title="Unlimited Music"
+        desc="Stream millions of songs from your favorite artists anytime, anywhere."
+      />
+    </div>
+  </motion.div>
+
+  {/* Card 2 */}
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 50 },
+      show: { opacity: 1, y: 0 }
+    }}
+    transition={{ duration: 0.7 }}
+    whileHover={{ scale: 1.08, y: -5 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-blue-500 to-cyan-500 blur-xl opacity-0 group-hover:opacity-40 transition duration-500"></div>
+
+    <div className="relative backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+      <FeatureCard
+        icon={<Waves className="text-blue-400" size={28} />}
+        title="High Quality Audio"
+        desc="Experience crystal clear sound with our premium 320 kbp audio streaming."
+      />
+    </div>
+  </motion.div>
+
+  {/* Card 3 */}
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 50 },
+      show: { opacity: 1, y: 0 }
+    }}
+    transition={{ duration: 0.7 }}
+    whileHover={{ scale: 1.08, y: -5 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-purple-500 to-indigo-500 blur-xl opacity-0 group-hover:opacity-60 transition duration-500 "></div>
+
+    <div className="relative backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+      <FeatureCard
+        icon={<Disc className="text-purple-400" size={28} />}
+        title="Personalized interface"
+        desc="Get smart recommendations tailored just for you based on your taste."
+      />
+    </div>
+  </motion.div>
+
+  {/* Card 4 */}
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 50 },
+      show: { opacity: 1, y: 0 }
+    }}
+    transition={{ duration: 0.7 }}
+    whileHover={{ scale: 1.08, y: -5 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-green-400 to-emerald-500 blur-xl opacity-0 group-hover:opacity-60 transition duration-500"></div>
+
+    <div className="relative backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+      <FeatureCard
+        icon={<Download className="text-green-400" size={28} />}
+        title="Offline Listening"
+        desc="Download your favorite tracks and enjoy music anytime."
+      />
+    </div>
+  </motion.div>
+
+</motion.div>
 
       
     </section>

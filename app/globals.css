@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0720; /* Deep purple from your Figma */
+  --background: #0f0720;
   --foreground: #ffffff;
 }
 
@@ -10,3 +10,20 @@ body {
   color: var(--foreground);
   font-family: sans-serif;
 }
+
+/* Gradient animation */
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background-size: 300% 300%;
+  animation: gradientMove 5s linear infinite;
+}
+

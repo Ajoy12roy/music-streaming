@@ -4,7 +4,11 @@ export interface UserProfile {
   phone: string;
   dob: string;
   image: string;
-  type?: string; // For the "Types of song" field you added
+  bio?: string;        // নতুন
+  address?: string;    // নতুন
+  type?: string; 
+  followers?: number;  // প্রিমিয়াম লুকের জন্য
+  following?: number;  // প্রিমিয়াম লুকের জন্য
 }
 
 export interface Song {
@@ -17,5 +21,5 @@ export interface Song {
 export interface Playlist {
   id: string;
   title: string;
-  subtitle: string; // e.g., "24 songs"
+  subtitle: string; 
 }
