@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import BottomPlayer from '@/components/BottomPlayer';
 import { 
   Search, Play, Heart, CalendarDays, 
-  Music4, Loader2, X, Download, 
+  Music4, Clock3, Loader2, X, Download, 
   Music, Star, Users 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -128,7 +128,7 @@ export default function AlbumPage() {
   const toggleFavorite = (song: Song) => {
     const savedFavs = JSON.parse(localStorage.getItem('favorites') || '[]');
     const isAlreadyFav = savedFavs.some((s: any) => s.id === song.id);
-    const updated = isAlreadyFav ? savedFavs.filter((s: any) => s.id !== song.id) : [...savedFavs, song];
+    let updated = isAlreadyFav ? savedFavs.filter((s: any) => s.id !== song.id) : [...savedFavs, song];
     setFavorites(updated.map((s: any) => s.id));
     localStorage.setItem('favorites', JSON.stringify(updated));
     window.dispatchEvent(new Event('storage_updated'));
@@ -245,7 +245,7 @@ export default function AlbumPage() {
                 <img src={selectedAlbum.coverImageUrl} className="w-full aspect-square object-cover rounded-[35px] shadow-2xl mb-6" />
                 <h2 className="text-3xl font-black mb-2">{selectedAlbum.title}</h2>
                 <p className="text-purple-400 font-bold mb-4 uppercase tracking-widest">{selectedAlbum.artist}</p>
-                <p className="text-sm text-gray-500 italic mb-6 line-clamp-3">{selectedAlbum.description}</p>
+                <p className="text-sm text-gray-500 italic mb-6 line-clamp-3">"{selectedAlbum.description}"</p>
                 <div className="flex gap-4">
                     <div className="bg-white/5 px-4 py-2 rounded-2xl text-xs font-bold"><CalendarDays className="inline mr-2" size={14}/>{selectedAlbum.releaseYear}</div>
                     <div className="bg-white/5 px-4 py-2 rounded-2xl text-xs font-bold"><Music4 className="inline mr-2" size={14}/>{selectedAlbum.trackCount} Songs</div>

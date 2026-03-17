@@ -81,3 +81,33 @@ export const fetchArtistTracks = async (artistName: string): Promise<Track[]> =>
     return [];
   }
 };
+// --- আপনার ফাইলের নিচে এই অংশটুকু যোগ করুন ---
+
+// 4. Get Top Albums (For Album Page)
+export const fetchTopAlbums = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}?method=chart.gettopalbums&api_key=${API_KEY}&format=json&limit=12`);
+    const data = await response.json();
+
+    if (!data.albums || !data.albums.album) return [];
+
+    return data.albums.album.map((album: any, index: number) => ({
+      id: index + 1,
+      title: album.name,
+      artist: album.artist.name,
+      genre: "Top Charts",
+      releaseYear: 2024,
+      trackCount: 10,
+      duration: "42:00",
+      // Last.fm এর বড় ইমেজটি নেওয়ার জন্য [3] ইনডেক্স ব্যবহার করা হয়েছে
+      coverImageUrl: album.image[3]["#text"] || `https://ui-avatars.com/api/?name=${encodeURIComponent(album.name)}&background=7c3aed&color=fff&size=600`,
+      rating: (Math.random() * (5 - 4) + 4).toFixed(1), 
+      listeners: parseInt(album.playcount || "0").toLocaleString(),
+      description: "Trending album currently popular on Last.fm world charts.",
+      songs: [] // ট্র্যাকলিস্টের জন্য আলাদা কল লাগে, আপাতত খালি রাখা হয়েছে
+    }));
+  } catch (error) {
+    console.error("Error fetching top albums:", error);
+    return [];
+  }
+};
